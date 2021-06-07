@@ -1,4 +1,4 @@
-#include <mapgen.h>
+#include "mapgen.h"
 
 int Mapgen::mtime()
 {

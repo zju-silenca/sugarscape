@@ -1,4 +1,4 @@
-#include <wormgen.h>
+#include "wormgen.h"
 
 int Wormgen::genWorm(int num){
     default_random_engine e(mtime());

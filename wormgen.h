@@ -1,6 +1,6 @@
 /*虫生成类，负责记录管理每个虫子的数据，管理生命周期
 */
-#include <mapgen.h>
+#include "mapgen.h"
 
 class Wormgen : public Mapgen{
 private:

@@ -1,4 +1,4 @@
-#include <result.h>
+#include "result.h"
 #include <iostream>
 using namespace std;
 class Sugarscape :public Result{

@@ -1,4 +1,4 @@
-#include <wormmove.h>
+#include "wormmove.h"
 
 int Wormmove::getNearTarget(int id)
 {
@@ -63,7 +63,7 @@ int Wormmove::getNearTarget(int id)
 }
 
 int Wormmove::getRandomTarget(int id){
-    default_random_engine e(mtime());
+    default_random_engine e(mtime()+id);
     uniform_int_distribution<int> intRandom(0,1);
     int i=0;
 

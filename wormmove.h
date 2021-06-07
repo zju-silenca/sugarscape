@@ -1,7 +1,7 @@
 /*虫移动类
 */
 
-#include <wormgen.h>
+#include "wormgen.h"
 
 class Wormmove : public Wormgen{
 private:
