@@ -18,7 +18,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     resultPainter = new QPainter(this);
 
+    //读取配置文件并初始化变量
     readConfig();
+
+    //初始化生成供第一次绘制
     obj.genMap(mapNum);
     obj.genWorm(wormNum);
     obj.simulateDays(daysNum);
@@ -31,8 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
     obj2.worm[0].x = mapNum/2;
     obj2.worm[0].y = mapNum/2;
     obj2.wormCome(mapNum/2,mapNum/2,0);
-    //QTextCodec* codec = QTextCodec::codecForName("GB2312");
-//    connect(this,SIGNAL(on_startButton_clicked()),this,SLOT(paintEvent()));
 }
 
 MainWindow::~MainWindow()
@@ -41,6 +42,8 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::readConfig(){
+    //读取配置文件
+
     QSettings setting("./config.ini",QSettings::IniFormat);
 
     mapNum = setting.value("mapNum").toInt();
@@ -72,13 +75,15 @@ void MainWindow::drawResult(){
     QPen pointPen;
     pointPen.setWidth(RectSize/2);
     pointPen.setColor("green");
+
+
         resultPainter->begin(this);
         for(int i = 0; i < mapNum; i++){
             for(int j = 0; j < mapNum; j++){
                 //地图绘制
                 resultPainter->drawRect(10+i*RectSize,60+j*RectSize,RectSize,RectSize);
 
-                if(!ui->roadShow->isChecked()){//未选择绘制路径时绘制糖量
+                if(!ui->roadShow->isChecked()){//未选择绘制路径时
                     //糖量绘制
                     Color_A = int(obj.map[i][j].sugar)*12;
                     resultPainter->fillRect(10+i*RectSize,60+j*RectSize,RectSize,RectSize,QColor(255,0,0,Color_A));
@@ -90,8 +95,8 @@ void MainWindow::drawResult(){
                         resultPainter->drawPoint(RectSize/2+10+i*RectSize,RectSize/2+60+j*RectSize);
                         resultPainter->setPen(nullptr);
                     }
-                }else{
-                    //糖量绘制
+                }else{//绘制路径
+                    //经过路径次数绘制
                     Color_A = int(obj2.map[i][j].sugar)*10;
                     if(Color_A > 255) Color_A = 255;
                     resultPainter->fillRect(10+i*RectSize,60+j*RectSize,RectSize,RectSize,QColor(255,0,0,Color_A));
@@ -120,6 +125,7 @@ void MainWindow::drawResult(){
 
 void MainWindow::on_startButton_clicked()
 {
+    //读取配置并判断是否合法
     if(ui->mapNum->text().toInt() <=0 ||ui->daysNum->text().toInt() <0||ui->wormNum->text().toInt() <=0 ){
         QMessageBox::warning(this,"fail",QString::fromLocal8Bit("参数错误"));
         return;
@@ -130,6 +136,7 @@ void MainWindow::on_startButton_clicked()
         wormNum = ui->wormNum->text().toInt();
     }
 
+    //判断当前应该绘制什么
     if(!ui->roadShow->isChecked()){
         obj.resetState();
         obj.genMap(mapNum);
@@ -147,6 +154,7 @@ void MainWindow::on_startButton_clicked()
         obj2.wormCome(mapNum/2,mapNum/2,0);
         obj2.singleMove(daysNum);
     }
+    //保存到配置文件
     QSettings setting("./config.ini",QSettings::IniFormat);
     setting.setValue("mapNum",mapNum);
     setting.setValue("wormNum",wormNum);
@@ -156,6 +164,7 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_oneDay_clicked()
 {
+    //单日模拟
     if(!ui->roadShow->isChecked()){
         obj.simulateDays(1);
         daysNum++;
@@ -184,6 +193,8 @@ void MainWindow::on_wormGen_triggered()
 
 void MainWindow::on_saveResult_clicked()
 {
+    //保存数据
+
     QString fileName = "./result.txt";
     QFile resultFile(fileName);
     QByteArray title = "最大随机糖量 最小随机糖量 格点糖量上限 有糖格点数量 每日最低消耗 每次移动消耗 最大储存糖量 最大摄入糖量 地图大小 模拟天数 虫子数目 死亡虫子数目\n";

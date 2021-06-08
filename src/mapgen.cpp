@@ -12,8 +12,7 @@ int Mapgen::mtime()
 {
     struct timeb timer;
     ftime(&timer);
-    //return timer.time * 1000 + timer.millitm;
-    return timer.time + timer.millitm;
+    return timer.time * 1000 + timer.millitm;
 }
 
 int Mapgen::genMap(int size){

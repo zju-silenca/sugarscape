@@ -1,4 +1,4 @@
-#include "sugarscape.h"
+﻿#include "sugarscape.h"
 #include <iostream>
 using namespace std;
 
@@ -39,14 +39,4 @@ void Sugarscape::resetState(){
     worm.clear();
     grave.clear();
 }
-Qtapi::Qtapi(){
-//    obj.maxRandSugar = 10;
-//    obj.minRandSugar = 3;
-//    obj.maxStorSugar = 20;
-//    obj.randCount = 30;
 
-//    obj.minConsum = 0.5;
-//    obj.moveConsum = 1;
-//    obj.dayMaxSugar = 5;
-//    obj.maxSugar = 10;
-}
