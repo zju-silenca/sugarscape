@@ -34,11 +34,12 @@ private slots:
 
     void on_saveResult_clicked();
 
+    void on_roadShow_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     int testNum,mapNum,wormNum,daysNum;
     void readConfig();
-
 
     QPainter *resultPainter;
 };

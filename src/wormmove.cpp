@@ -1,4 +1,4 @@
-#include "wormmove.h"
+﻿#include "wormmove.h"
 
 int Wormmove::getNearTarget(int id)
 {
@@ -63,7 +63,7 @@ int Wormmove::getNearTarget(int id)
 }
 
 int Wormmove::getRandomTarget(int id){
-    default_random_engine e(mtime()+id);
+    default_random_engine e(mtime()+id+targetX+targetY);
     uniform_int_distribution<int> intRandom(0,1);
     int i=0;
 
@@ -142,6 +142,41 @@ int Wormmove::wormMove(int id)
 int Wormmove::allWormMove(){
     for(int i=0; i<worm.size(); i++){
         wormMove(i);
+    }
+    return 0;
+}
+
+
+int Wormmove::singleMove(int num){
+    default_random_engine e(mtime());
+    uniform_int_distribution<int> intRandom(0,1);
+    for(int i=0; i<num; i++){
+        map[worm[0].x][worm[0].y].sugar += 1;
+        do{
+            if(intRandom(e)){
+                if(intRandom(e)){
+                    targetX = worm[0].x + 1;
+                    targetY = worm[0].y;
+                }else{
+                    targetX = worm[0].x - 1;
+                    targetY = worm[0].y;
+                }
+            }else{
+                if(intRandom(e)){
+                    targetY = worm[0].y + 1;
+                    targetX = worm[0].x;
+                }else{
+                    targetY = worm[0].y - 1;
+                    targetX = worm[0].x;
+                }
+            }
+        }while(targetX < 0 || targetX >= map.size()
+               || targetY < 0 || targetY >= map.size()
+               || map[targetX][targetY].isOccupied);
+        wormCome(targetX,targetY,0);
+        wormLeave(worm[0].x,worm[0].y);
+        worm[0].x = targetX;
+        worm[0].y = targetY;
     }
     return 0;
 }

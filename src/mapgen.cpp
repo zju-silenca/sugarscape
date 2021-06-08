@@ -1,4 +1,4 @@
-#include "mapgen.h"
+﻿#include "mapgen.h"
 
 double Mapgen::maxRandSugar = 10;
 double Mapgen::minRandSugar = 3;
@@ -12,7 +12,8 @@ int Mapgen::mtime()
 {
     struct timeb timer;
     ftime(&timer);
-    return timer.time * 1000 + timer.millitm;
+    //return timer.time * 1000 + timer.millitm;
+    return timer.time + timer.millitm;
 }
 
 int Mapgen::genMap(int size){

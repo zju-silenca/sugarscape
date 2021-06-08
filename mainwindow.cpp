@@ -22,6 +22,15 @@ MainWindow::MainWindow(QWidget *parent)
     obj.genMap(mapNum);
     obj.genWorm(wormNum);
     obj.simulateDays(daysNum);
+
+    obj2.map.resize(mapNum);
+    obj2.worm.resize(1);
+    for (int i=0; i<mapNum; i++){
+        obj2.map[i].resize(mapNum);
+    }
+    obj2.worm[0].x = mapNum/2;
+    obj2.worm[0].y = mapNum/2;
+    obj2.wormCome(mapNum/2,mapNum/2,0);
     //QTextCodec* codec = QTextCodec::codecForName("GB2312");
 //    connect(this,SIGNAL(on_startButton_clicked()),this,SLOT(paintEvent()));
 }
@@ -63,22 +72,37 @@ void MainWindow::drawResult(){
     QPen pointPen;
     pointPen.setWidth(RectSize/2);
     pointPen.setColor("green");
-
-
         resultPainter->begin(this);
         for(int i = 0; i < mapNum; i++){
             for(int j = 0; j < mapNum; j++){
                 //地图绘制
                 resultPainter->drawRect(10+i*RectSize,60+j*RectSize,RectSize,RectSize);
-                //糖量绘制
-                Color_A = int(obj.map[i][j].sugar)*12;
-                resultPainter->fillRect(10+i*RectSize,60+j*RectSize,RectSize,RectSize,QColor(255,0,0,Color_A));
-                //虫子绘制
-                if(obj.map[i][j].isOccupied)
-                {
-                    resultPainter->setPen(pointPen);
-                    resultPainter->drawPoint(RectSize/2+10+i*RectSize,RectSize/2+60+j*RectSize);
-                    resultPainter->setPen(nullptr);
+
+                if(!ui->roadShow->isChecked()){//未选择绘制路径时绘制糖量
+                    //糖量绘制
+                    Color_A = int(obj.map[i][j].sugar)*12;
+                    resultPainter->fillRect(10+i*RectSize,60+j*RectSize,RectSize,RectSize,QColor(255,0,0,Color_A));
+
+                    //虫子绘制
+                    if(obj.map[i][j].isOccupied)
+                    {
+                        resultPainter->setPen(pointPen);
+                        resultPainter->drawPoint(RectSize/2+10+i*RectSize,RectSize/2+60+j*RectSize);
+                        resultPainter->setPen(nullptr);
+                    }
+                }else{
+                    //糖量绘制
+                    Color_A = int(obj2.map[i][j].sugar)*10;
+                    if(Color_A > 255) Color_A = 255;
+                    resultPainter->fillRect(10+i*RectSize,60+j*RectSize,RectSize,RectSize,QColor(255,0,0,Color_A));
+
+                    //虫子绘制
+                    if(obj2.map[i][j].isOccupied)
+                    {
+                        resultPainter->setPen(pointPen);
+                        resultPainter->drawPoint(RectSize/2+10+i*RectSize,RectSize/2+60+j*RectSize);
+                        resultPainter->setPen(nullptr);
+                    }
                 }
             }
         }
@@ -105,11 +129,24 @@ void MainWindow::on_startButton_clicked()
         daysNum = ui->daysNum->text().toInt();
         wormNum = ui->wormNum->text().toInt();
     }
-    obj.resetState();
-    obj.genMap(mapNum);
-    obj.genWorm(wormNum);
-    obj.simulateDays(daysNum);
 
+    if(!ui->roadShow->isChecked()){
+        obj.resetState();
+        obj.genMap(mapNum);
+        obj.genWorm(wormNum);
+        obj.simulateDays(daysNum);
+    }else{
+        obj2.resetState();
+        obj2.map.resize(mapNum);
+        obj2.worm.resize(1);
+        for (int i=0; i<mapNum; i++){
+            obj2.map[i].resize(mapNum);
+        }
+        obj2.worm[0].x = mapNum/2;
+        obj2.worm[0].y = mapNum/2;
+        obj2.wormCome(mapNum/2,mapNum/2,0);
+        obj2.singleMove(daysNum);
+    }
     QSettings setting("./config.ini",QSettings::IniFormat);
     setting.setValue("mapNum",mapNum);
     setting.setValue("wormNum",wormNum);
@@ -119,9 +156,16 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_oneDay_clicked()
 {
-    obj.simulateDays(1);
-    daysNum++;
-    ui->daysNum->setText(QString::number(daysNum));
+    if(!ui->roadShow->isChecked()){
+        obj.simulateDays(1);
+        daysNum++;
+        ui->daysNum->setText(QString::number(daysNum));
+    }else{
+        obj2.singleMove(1);
+        daysNum++;
+        ui->daysNum->setText(QString::number(daysNum));
+    }
+
     update();
 }
 
@@ -168,4 +212,10 @@ void MainWindow::on_saveResult_clicked()
 //    resultFile.write();
 
     resultFile.close();
+}
+
+
+void MainWindow::on_roadShow_stateChanged(int arg1)
+{
+    update();
 }

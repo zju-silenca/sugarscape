@@ -1,4 +1,4 @@
-#include "result.h"
+﻿#include "result.h"
 #include <iostream>
 using namespace std;
 class Sugarscape :public Result{
@@ -13,5 +13,6 @@ public:
 class Qtapi : public Sugarscape{
 public:
     Sugarscape obj;
+    Sugarscape obj2;
     Qtapi();
 };
