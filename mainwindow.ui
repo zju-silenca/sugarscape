@@ -129,6 +129,13 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>加强虫子数目</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item row="0" column="1">
@@ -141,6 +148,9 @@
             </item>
             <item>
              <widget class="QLineEdit" name="daysNum"/>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="crossWayCount"/>
             </item>
            </layout>
           </item>

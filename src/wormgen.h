@@ -8,6 +8,7 @@ private:
         int x,y;
         double sugar = 10;
         int steps = 0;
+        int moveWay = 0; //移动策略
         bool live = true;
     };
 
@@ -22,6 +23,7 @@ public:
     static double moveConsum;//每次移动消耗
     static double maxSugar;//能存储最大糖量
     static double dayMaxSugar;//每天最大摄入糖量
+    static int crossWayCount;
 
     //生成虫子
     int genWorm(int);

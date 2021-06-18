@@ -11,7 +11,9 @@ private:
 public:
 
     //获取附近目标
-    int getNearTarget(int id);
+    int getNearTarget(int id);//成功后返回移动策略数字代号
+    int getNearTarget1(int id);//周围四格
+    int getNearTarget2(int id);//四方各向外延伸一格
     //随机一个目标
     int getRandomTarget(int id);
     //指定id虫子移动

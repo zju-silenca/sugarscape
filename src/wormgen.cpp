@@ -1,9 +1,10 @@
-#include "wormgen.h"
+﻿#include "wormgen.h"
 
 double Wormgen::minConsum = 0.5;
 double Wormgen::moveConsum = 1;
 double Wormgen::dayMaxSugar = 5;
 double Wormgen::maxSugar = 10;
+int Wormgen::crossWayCount = 0;
 
 Wormgen::Wormgen(){
 
@@ -12,6 +13,7 @@ Wormgen::Wormgen(){
 int Wormgen::genWorm(int num){
     default_random_engine e(mtime());
     uniform_int_distribution<int> intRandom(0,map.size()-1);
+    uniform_int_distribution<int> wormRandom(0,num-1);
     //uniform_real_distribution<double> doubleRandom(0, 20);
     worm.resize(num);
     int x,y;
@@ -27,6 +29,16 @@ int Wormgen::genWorm(int num){
         map[x][y].isOccupied = true;
         map[x][y].wormId = i;
     }
+
+    for(int i=0; i<crossWayCount; ){
+        int id = wormRandom(e);
+        if(worm[id].moveWay == 0)
+        {
+            worm[id].moveWay = 1;
+            i++;
+        }
+    }
+
     return 0;
 }
 

@@ -50,6 +50,7 @@ void MainWindow::readConfig(){
     wormNum = setting.value("wormNum").toInt();
     daysNum = setting.value("daysNum").toInt();
 
+
     obj.maxRandSugar = setting.value("maxRandSugar").toDouble();
     obj.minRandSugar = setting.value("minRandSugar").toDouble();
     obj.maxStorSugar = setting.value("maxStorSugar").toDouble();
@@ -60,9 +61,12 @@ void MainWindow::readConfig(){
     obj.maxSugar = setting.value("maxSugar").toDouble();
     obj.dayMaxSugar = setting.value("dayMaxSugar").toDouble();
 
+    obj.crossWayCount = setting.value("crossWayCount").toInt();
+
     ui->mapNum->setText(setting.value("mapNum").toString());
     ui->wormNum->setText(setting.value("wormNum").toString());
     ui->daysNum->setText(setting.value("daysNum").toString());
+    ui->crossWayCount->setText(setting.value("crossWayCount").toString());
 }
 
 void MainWindow::paintEvent(QPaintEvent *event){
@@ -72,9 +76,11 @@ void MainWindow::paintEvent(QPaintEvent *event){
 void MainWindow::drawResult(){
     int Color_A;
     int RectSize = 20;//地图格子的尺寸
-    QPen pointPen;
+    QPen pointPen,pointPen2;
     pointPen.setWidth(RectSize/2);
     pointPen.setColor("green");
+    pointPen2.setWidth(RectSize/2);
+    pointPen2.setColor("blue");
 
 
         resultPainter->begin(this);
@@ -91,7 +97,11 @@ void MainWindow::drawResult(){
                     //虫子绘制
                     if(obj.map[i][j].isOccupied)
                     {
-                        resultPainter->setPen(pointPen);
+                        if(obj.worm[obj.map[i][j].wormId].moveWay == 1)
+                            resultPainter->setPen(pointPen2);
+                        else
+                            resultPainter->setPen(pointPen);
+                        //resultPainter->setPen(pointPen);
                         resultPainter->drawPoint(RectSize/2+10+i*RectSize,RectSize/2+60+j*RectSize);
                         resultPainter->setPen(nullptr);
                     }
@@ -104,6 +114,7 @@ void MainWindow::drawResult(){
                     //虫子绘制
                     if(obj2.map[i][j].isOccupied)
                     {
+                        //pointPen.setColor("green");
                         resultPainter->setPen(pointPen);
                         resultPainter->drawPoint(RectSize/2+10+i*RectSize,RectSize/2+60+j*RectSize);
                         resultPainter->setPen(nullptr);
@@ -114,7 +125,10 @@ void MainWindow::drawResult(){
         //墓地绘制
         for(int i =0; i<obj.grave.size(); i++){
             resultPainter->drawText(10,50,QString::fromLocal8Bit("墓地"));
-            resultPainter->setPen(pointPen);
+            if(obj.grave[i].moveWay == 1)
+                resultPainter->setPen(pointPen2);
+            else
+                resultPainter->setPen(pointPen);
             resultPainter->drawPoint(50+i*RectSize,45);
             resultPainter->setPen(nullptr);
         }
@@ -126,7 +140,8 @@ void MainWindow::drawResult(){
 void MainWindow::on_startButton_clicked()
 {
     //读取配置并判断是否合法
-    if(ui->mapNum->text().toInt() <=0 ||ui->daysNum->text().toInt() <0||ui->wormNum->text().toInt() <=0 ){
+    if(ui->mapNum->text().toInt() <=0 ||ui->daysNum->text().toInt() <0||ui->wormNum->text().toInt() <=0
+            || ui->crossWayCount->text().toInt() < 0 || ui->crossWayCount->text().toInt() > ui->wormNum->text().toInt()){
         QMessageBox::warning(this,"fail",QString::fromLocal8Bit("参数错误"));
         return;
     }
@@ -134,6 +149,7 @@ void MainWindow::on_startButton_clicked()
         mapNum = ui->mapNum->text().toInt();
         daysNum = ui->daysNum->text().toInt();
         wormNum = ui->wormNum->text().toInt();
+        obj.crossWayCount = ui->crossWayCount->text().toInt();
     }
 
     //判断当前应该绘制什么
@@ -159,6 +175,7 @@ void MainWindow::on_startButton_clicked()
     setting.setValue("mapNum",mapNum);
     setting.setValue("wormNum",wormNum);
     setting.setValue("daysNum",daysNum);
+    setting.setValue("crossWayCount",obj.crossWayCount);
     update();
 }
 
@@ -197,7 +214,7 @@ void MainWindow::on_saveResult_clicked()
 
     QString fileName = "./result.txt";
     QFile resultFile(fileName);
-    QByteArray title = "最大随机糖量 最小随机糖量 格点糖量上限 有糖格点数量 每日最低消耗 每次移动消耗 最大储存糖量 最大摄入糖量 地图大小 模拟天数 虫子数目 死亡虫子数目\n";
+    QByteArray title = "最大随机糖量 最小随机糖量 格点糖量上限 有糖格点数量 每日最低消耗 每次移动消耗 最大储存糖量 最大摄入糖量 地图大小 模拟天数 虫子数目 死亡虫子数目 加强虫子数目 死亡加强虫子数目\n";
     if(!resultFile.exists()){
         resultFile.open(QIODevice::WriteOnly | QIODevice::Append);
         resultFile.write(title);
@@ -215,7 +232,13 @@ void MainWindow::on_saveResult_clicked()
     result += QString::number(mapNum) + ' ';
     result += QString::number(daysNum) + ' ';
     result += QString::number(wormNum) + ' ';
-    result += QString::number(obj.grave.size());
+    result += QString::number(obj.grave.size())+ ' ';
+    result += QString::number(obj.crossWayCount) + ' ';
+    int deadNum =0;
+    for(int i=0; i<obj.grave.size(); i++)
+        if(obj.grave[i].moveWay == 1)
+            deadNum++;
+    result += QString::number(deadNum) + ' ';
     resultFile.write(result.toUtf8()+'\n');
 
 
