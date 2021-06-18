@@ -36,6 +36,8 @@ private slots:
 
     void on_roadShow_stateChanged(int arg1);
 
+    void on_saveMultyResult_clicked();
+
 private:
     Ui::MainWindow *ui;
     int testNum,mapNum,wormNum,daysNum;

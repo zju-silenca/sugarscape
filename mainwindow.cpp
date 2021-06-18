@@ -230,3 +230,30 @@ void MainWindow::on_roadShow_stateChanged(int arg1)
 {
     update();
 }
+
+void MainWindow::on_saveMultyResult_clicked()
+{
+    int times = ui->repeatTimes->text().toInt();
+    if(ui->mapNum->text().toInt() <=0 ||ui->daysNum->text().toInt() <0||ui->wormNum->text().toInt() <=0 ){
+        QMessageBox::warning(this,"fail",QString::fromLocal8Bit("参数错误"));
+        return;
+    }
+    else{
+        mapNum = ui->mapNum->text().toInt();
+        daysNum = ui->daysNum->text().toInt();
+        wormNum = ui->wormNum->text().toInt();
+    }
+    if(times <= 0)
+        {
+            QMessageBox::warning(this,"fail",QString::fromLocal8Bit("参数错误"));
+            return;
+        }
+    for(int i=0; i<times; i++){
+        obj.resetState();
+        obj.genMap(mapNum);
+        obj.genWorm(wormNum);
+        obj.simulateDays(daysNum);
+        on_saveResult_clicked();
+    }
+    update();
+}
