@@ -38,9 +38,12 @@ private slots:
 
     void on_saveMultyResult_clicked();
 
+    void on_autoPlay_clicked(bool checked);
+
 private:
     Ui::MainWindow *ui;
     int testNum,mapNum,wormNum,daysNum;
+    QTimer *autoPlayTimer;
     void readConfig();
 
     QPainter *resultPainter;

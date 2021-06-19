@@ -17,7 +17,7 @@ int Wormmove::getNearTarget1(int id)
     int currentX, currentY, flag = 0;
     currentX = worm[id].x;
     currentY = worm[id].y;
-    temp = worm[id].sugar;
+    temp = map[currentX][currentY].sugar;
 
     if(currentX + 1 < map.size())
         if (temp < map[currentX + 1][currentY].sugar )
@@ -86,73 +86,56 @@ int Wormmove::getNearTarget2(int id)
     int currentX, currentY, flag = 0;
     if(getNearTarget1(id))
     {
-        currentX = targetX;
-        currentY = targetY;
-        temp = map[currentX][currentY].sugar;
+        currentX = worm[id].x;
+        currentY = worm[id].y;
+        temp = map[targetX][targetY].sugar;
         flag = 1;
     }else{
         currentX = worm[id].x;
         currentY = worm[id].y;
-        temp = worm[id].sugar;
+        temp = map[currentX][currentY].sugar;
     }
 
 
     if(currentX + 2 < map.size())
         if (temp < map[currentX + 2][currentY].sugar )
         {
-            targetX = currentX + 2;
-            targetY = currentY;
-            if(map[targetX][targetY].isOccupied){
-                targetX = currentX;
+            if(! map[currentX + 2][currentY].isOccupied){
+                targetX = currentX + 2;
                 targetY = currentY;
-
-            }else{
-            temp = map[targetX][targetY].sugar;
-            flag = 2;
+                temp = map[targetX][targetY].sugar;
+                flag = 2;
             }
         }
     if(currentX - 2 >= 0)
         if (temp < map[currentX - 2][currentY].sugar )
         {
-            targetX = currentX - 2;
-            targetY = currentY;
-            if(map[targetX][targetY].isOccupied){
-                targetX = currentX;
+            if(! map[currentX - 2][currentY].isOccupied){
+                targetX = currentX - 2;
                 targetY = currentY;
-
-            }else{
-            temp = map[targetX][targetY].sugar;
-            flag = 2;
+                temp = map[targetX][targetY].sugar;
+                flag = 2;
             }
         }
     if(currentY + 2 < map.size())
         if (temp < map[currentX][currentY + 2].sugar )
         {
-            targetX = currentX;
-            targetY = currentY + 2;
-            if(map[targetX][targetY].isOccupied){
+            if(! map[currentX][currentY + 2].isOccupied){
                 targetX = currentX;
-                targetY = currentY;
-
-            }else{
-            temp = map[targetX][targetY].sugar;
-            flag = 2;
+                targetY = currentY + 2;
+                temp = map[targetX][targetY].sugar;
+                flag = 2;
             }
         }
     if(currentY - 2 >= 0)
         if (temp < map[currentX][currentY - 2].sugar )
         {
-            targetX = currentX;
-            targetY = currentY - 2;
-            if(map[targetX][targetY].isOccupied){
+            if(! map[currentX][currentY - 2].isOccupied){
                 targetX = currentX;
-                targetY = currentY;
-
-            }else{
-            temp = map[targetX][targetY].sugar;
-            flag = 2;
+                targetY = currentY - 2;
+                temp = map[targetX][targetY].sugar;
+                flag = 2;
             }
-
         }
     return flag;
 }
@@ -203,6 +186,8 @@ int Wormmove::wormMove(int id)
         daysConsum(id);
         return 0;
     }
+
+    daysConsum(id);
     //无足够糖量移动
     if(worm[id].sugar - moveConsum <= 0){
         worm[id].sugar = 0;
@@ -210,6 +195,7 @@ int Wormmove::wormMove(int id)
         buryWorm(id);
         return 0;
     }
+
     //移动
     switch (getNearTarget(id)) {
         case 1:
@@ -310,6 +296,7 @@ int Wormmove::singleMove(int num){
         wormLeave(worm[0].x,worm[0].y);
         worm[0].x = targetX;
         worm[0].y = targetY;
+        worm[0].steps++;
     }
     return 0;
 }

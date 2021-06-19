@@ -11,7 +11,7 @@ Wormgen::Wormgen(){
 }
 
 int Wormgen::genWorm(int num){
-    default_random_engine e(mtime());
+    default_random_engine e(mtime()+num+map.size());
     uniform_int_distribution<int> intRandom(0,map.size()-1);
     uniform_int_distribution<int> wormRandom(0,num-1);
     //uniform_real_distribution<double> doubleRandom(0, 20);

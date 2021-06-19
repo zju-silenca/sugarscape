@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QTextCodec>
 #include <QSettings>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,7 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     resultPainter = new QPainter(this);
-
+    autoPlayTimer = new QTimer(this);
+    connect(autoPlayTimer, SIGNAL(timeout()), this, SLOT(on_oneDay_clicked()));
     //读取配置文件并初始化变量
     readConfig();
 
@@ -108,6 +110,7 @@ void MainWindow::drawResult(){
                 }else{//绘制路径
                     //经过路径次数绘制
                     Color_A = int(obj2.map[i][j].sugar)*10;
+                    //Color_A = int(obj2.map[i][j].sugar)*255/int(obj2.worm[0].steps+1);
                     if(Color_A > 255) Color_A = 255;
                     resultPainter->fillRect(10+i*RectSize,60+j*RectSize,RectSize,RectSize,QColor(255,0,0,Color_A));
 
@@ -279,4 +282,22 @@ void MainWindow::on_saveMultyResult_clicked()
         on_saveResult_clicked();
     }
     update();
+}
+
+void MainWindow::on_autoPlay_clicked(bool checked)
+{
+    int mtime = int(ui->autoTime->text().toDouble()*1000);
+    if(checked)
+    {
+        if(mtime <= 0)
+        {
+            ui->autoPlay->setChecked(false);
+            QMessageBox::warning(this,"fail",QString::fromLocal8Bit("参数错误"));
+            return;
+        }
+        autoPlayTimer->start(mtime);
+    }else
+    {
+        autoPlayTimer->stop();
+    }
 }
