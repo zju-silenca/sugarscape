@@ -44,6 +44,8 @@ int Wormgen::genWorm(int num){
 
 int Wormgen::buryWorm(int id){
     grave.push_back(worm[id]);
+    worm[id].sugar = 0;
+    worm[id].live = false;
     wormLeave(worm[id].x,worm[id].y);
     return 0;
 }

@@ -188,10 +188,11 @@ int Wormmove::wormMove(int id)
     }
 
     daysConsum(id);
+    if(!worm[id].live){
+        return 0;
+    }
     //无足够糖量移动
-    if(worm[id].sugar - moveConsum <= 0){
-        worm[id].sugar = 0;
-        worm[id].live = false;
+    if(worm[id].sugar - moveConsum <= 0 && worm[id].live){
         buryWorm(id);
         return 0;
     }
