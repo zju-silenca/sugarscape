@@ -5,6 +5,8 @@ double Wormgen::moveConsum = 1;
 double Wormgen::dayMaxSugar = 5;
 double Wormgen::maxSugar = 10;
 int Wormgen::crossWayCount = 0;
+double Wormgen::bornLine = -1;//繁殖水平线
+double Wormgen::bornConsum = 0.7;//繁殖消耗比例
 
 Wormgen::Wormgen(){
 
@@ -84,4 +86,50 @@ int Wormgen::eatSugar(){
         map[worm[id].x][worm[id].y].sugar -= eatCount;
     }
     return 0;
+}
+
+int Wormgen::bornWorm(int id)
+{
+    if(worm[id].sugar < bornLine || bornLine <= 0)
+        return 0;
+    default_random_engine e(mtime()+id+map.size());
+    uniform_int_distribution<int> intRandom(0,1);
+    int targetX, targetY,i=0;
+    do{
+        if(intRandom(e)){
+            if(intRandom(e)){
+                targetX = worm[id].x + 1;
+                targetY = worm[id].y;
+            }else{
+                targetX = worm[id].x - 1;
+                targetY = worm[id].y;
+            }
+        }else{
+            if(intRandom(e)){
+                targetY = worm[id].y + 1;
+                targetX = worm[id].x;
+            }else{
+                targetY = worm[id].y - 1;
+                targetX = worm[id].x;
+            }
+        }
+        i++;
+        if(i>=10)//防止死循环
+        {
+            return 0;
+        }
+    }while (targetX < 0 || targetX >= map.size()
+            || targetY < 0 || targetY >= map.size()
+            || map[targetX][targetY].isOccupied);
+
+    wormdata newWorm = {
+        targetX,targetY,
+        worm[id].sugar*bornConsum,
+        0,
+        worm[id].moveWay,
+        true
+    };
+
+    worm[id].sugar -= worm[id].sugar*bornConsum;
+    worm.push_back(newWorm);
 }

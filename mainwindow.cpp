@@ -64,6 +64,8 @@ void MainWindow::readConfig(){
     obj.dayMaxSugar = setting.value("dayMaxSugar").toDouble();
 
     obj.crossWayCount = setting.value("crossWayCount").toInt();
+    obj.bornLine = setting.value("bornLine").toDouble();
+    obj.bornConsum = setting.value("bornConsum").toDouble();
 
     ui->mapNum->setText(setting.value("mapNum").toString());
     ui->wormNum->setText(setting.value("wormNum").toString());
@@ -217,7 +219,7 @@ void MainWindow::on_saveResult_clicked()
 
     QString fileName = "./result.txt";
     QFile resultFile(fileName);
-    QByteArray title = "最大随机糖量 最小随机糖量 格点糖量上限 有糖格点数量 每日最低消耗 每次移动消耗 最大储存糖量 最大摄入糖量 地图大小 模拟天数 虫子数目 死亡虫子数目 加强虫子数目 死亡加强虫子数目\n";
+    QByteArray title = "最大随机糖量 最小随机糖量 格点糖量上限 有糖格点数量 每日最低消耗 每次移动消耗 最大储存糖量 最大摄入糖量 地图大小 模拟天数 初始虫子数目 总虫子数目 死亡虫子数目 初始加强虫子数目 总加强虫子数目 死亡加强虫子数目\n";
     if(!resultFile.exists()){
         resultFile.open(QIODevice::WriteOnly | QIODevice::Append);
         resultFile.write(title);
@@ -235,12 +237,17 @@ void MainWindow::on_saveResult_clicked()
     result += QString::number(mapNum) + ' ';
     result += QString::number(daysNum) + ' ';
     result += QString::number(wormNum) + ' ';
+    result += QString::number(obj.worm.size()) + ' ';
     result += QString::number(obj.grave.size())+ ' ';
     result += QString::number(obj.crossWayCount) + ' ';
-    int deadNum =0;
+    int deadNum =0 , allNum=0;
     for(int i=0; i<obj.grave.size(); i++)
         if(obj.grave[i].moveWay == 1)
             deadNum++;
+    for(int i=0; i<obj.worm.size(); i++)
+        if(obj.worm[i].moveWay == 1)
+            allNum++;
+    result += QString::number(allNum) + ' ';
     result += QString::number(deadNum) + ' ';
     resultFile.write(result.toUtf8()+'\n');
 

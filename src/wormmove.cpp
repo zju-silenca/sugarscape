@@ -183,6 +183,7 @@ int Wormmove::wormMove(int id)
     }
     //若当前糖分够消耗一天以上则不动扣除最低消耗
     if(map[worm[id].x][worm[id].y].sugar > minConsum){
+
         daysConsum(id);
         return 0;
     }
@@ -262,6 +263,7 @@ int Wormmove::wormMove(int id)
 
 int Wormmove::allWormMove(){
     for(int i=0; i<worm.size(); i++){
+        bornWorm(i);
         wormMove(i);
     }
     return 0;

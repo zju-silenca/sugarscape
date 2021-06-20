@@ -41,7 +41,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>170</y>
+     <y>200</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -57,9 +57,9 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>31</y>
+     <y>20</y>
      <width>341</width>
-     <height>121</height>
+     <height>160</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -90,6 +90,20 @@
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>每日最大摄入糖量</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>繁殖水平线</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>繁殖消耗比例</string>
         </property>
        </widget>
       </item>
@@ -124,6 +138,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="dayMaxSugar"/>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="bornLine"/>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="bornConsum"/>
       </item>
      </layout>
     </item>

@@ -23,7 +23,9 @@ public:
     static double moveConsum;//每次移动消耗
     static double maxSugar;//能存储最大糖量
     static double dayMaxSugar;//每天最大摄入糖量
-    static int crossWayCount;
+    static int crossWayCount;//增强移动策略虫子数量
+    static double bornLine;//繁殖水平线
+    static double bornConsum;//繁殖消耗
 
     //生成虫子
     int genWorm(int);
@@ -33,5 +35,8 @@ public:
     int daysConsum(int id);
     //扣除所有虫子的每日消耗
     int eatSugar();
+
+    //繁殖
+    int bornWorm(int id);
     
 };
